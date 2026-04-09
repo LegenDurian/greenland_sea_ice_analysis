@@ -1,0 +1,10 @@
+outputs/
+data/
+__pycache__/
+*.pt
+*.pth
+.venv/
+venv/
+*.egg-info/
+.DS_Store
+Thumbs.db
