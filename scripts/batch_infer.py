@@ -1,16 +1,37 @@
 """
-batch_infer.py
---------------
+batch_infer.py — Batch inference on folders of images
+=====================================================
 Drop a folder of images into data/batch_input/ and run this script.
-Image type (thermal vs visible) is detected automatically by image dimensions:
-  - thermal:  640x512  (< 1 MP)
-  - visible: 4000x3000 (> 1 MP)
+Image type (thermal vs visible) is detected automatically by pixel count:
+  - thermal:  < 1 MP  (e.g. 640x512)
+  - visible:  >= 1 MP (e.g. 4000x3000)
 
-Outputs go to:
-  outputs/batch_results/{input_folder_name}/{thermal|visible}_{image_stem}/
-    mask.png              — binary mask (white=ice)
-    boundary_overlay.png  — original image with yellow floe boundaries
-    floe_size_hist.png    — histogram of individual floe areas (px²)
+Usage
+-----
+    python scripts/batch_infer.py
+
+Configuration (edit variables at the top of this file)
+------------------------------------------------------
+    METHOD              "binary_mask" or "unet" — segmentation method
+    INPUT_FOLDER        Subfolder name inside data/batch_input/, or None for all
+    DRONE_HEIGHT_M      Flight altitude in metres (change per flight)
+    BM_CLAHE_CLIP       CLAHE clip limit (default 1.5)
+    BM_THRESH_VAL       Binary threshold 0-255 (default 75)
+    FRACTAL_MIN_AREA_M2 Min floe area (m^2) for fractal regression (default 1.0)
+
+Outputs (per image)
+-------------------
+    outputs/results/batch/{folder}/{thermal|visible}_{stem}/
+        mask.png              — binary ice/sea mask
+        boundary_overlay.png  — original image with yellow floe boundaries
+        floe_size_hist.png    — histogram of floe areas (m^2)
+        pa_scaling.png        — log-log P-A plot with fractal dimension D
+        floe_labels.npy       — 2D int32 label array (0=sea, 1..N=floe ID)
+        floe_stats.json       — per-floe shape metrics + fractal dimension
+
+Dependencies
+------------
+    torch, numpy, Pillow, matplotlib, opencv-python
 """
 
 import sys

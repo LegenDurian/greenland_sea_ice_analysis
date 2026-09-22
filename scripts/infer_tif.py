@@ -1,17 +1,36 @@
 """
-infer_tif.py
-------------
-Applies the binary_mask thresholding pipeline to thermal .tif files in
-data/thermal_tif/. The .tif files contain raw temperature values (float, °C).
+infer_tif.py — Thermal TIF processing pipeline
+================================================
+Applies the binary_mask thresholding pipeline to raw thermal .tif files in
+data/thermal_tif/. The .tif files contain float32 temperature values in deg C.
 
-Outputs per-image folders under outputs/tif_results/{image_stem}/:
-  mask.png              — binary ice/sea mask
-  boundary_overlay.png  — inferno thermal image with yellow floe boundaries
-  floe_size_hist.png    — floe area distribution (m²)
-  floe_labels.npy       — 2D int32 label array  (0=sea, 1..N=floe ID)
-  floe_stats.json       — shape + size metrics per floe (m units)
-  pixel_temp_hist.png   — histogram of all pixel temperatures (°C)
-  floe_temp_hist.png    — histogram of per-floe average temperatures (°C)
+Usage
+-----
+    python scripts/infer_tif.py
+
+Configuration (edit variables at the top of this file)
+------------------------------------------------------
+    INPUT_FILE           Specific TIF stem to process, or None for all
+    ROTATE_180           Rotate image 180 deg before processing (default True)
+    DRONE_HEIGHT_M       Flight altitude in metres (change per flight)
+    BM_THRESH_VAL        Binary threshold 0-255 (default 75)
+    FRACTAL_MIN_AREA_M2  Min floe area (m^2) for fractal regression (default 1.0)
+
+Outputs (per TIF)
+-----------------
+    outputs/results/tif/{stem}/
+        mask.png              — binary ice/sea mask
+        boundary_overlay.png  — inferno thermal image with yellow floe boundaries
+        floe_size_hist.png    — floe area distribution (m^2)
+        pa_scaling.png        — log-log P-A plot with fractal dimension D
+        floe_labels.npy       — 2D int32 label array (0=sea, 1..N=floe ID)
+        floe_stats.json       — per-floe shape + temperature metrics
+        pixel_temp_hist.png   — histogram of all pixel temperatures (deg C)
+        floe_temp_hist.png    — histogram of per-floe average temperatures (deg C)
+
+Dependencies
+------------
+    opencv-python, numpy, Pillow, matplotlib
 """
 
 import sys

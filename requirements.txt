@@ -1,9 +1,16 @@
-opencv-python
-numpy
-pillow
-matplotlib
-torch
-torchvision
-segmentation-models-pytorch
-pandas
-scipy
+# Core dependencies (required for all scripts)
+opencv-python>=4.5
+numpy>=1.21
+Pillow>=9.0
+matplotlib>=3.5
+
+# Deep learning (required for UNet inference and training)
+torch>=1.12
+torchvision>=0.13
+
+# Pretrained encoder (required for batch_infer_visible_multiscale.py
+# and scripts/training/unet_pretrained_colab.ipynb)
+segmentation-models-pytorch>=0.3
+
+# Optional: GSD estimator (scripts/experimental/gsd_estimator.py)
+# rasterio>=1.3

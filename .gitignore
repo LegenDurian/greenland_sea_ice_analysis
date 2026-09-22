@@ -1,10 +1,28 @@
-outputs/
-data/
-__pycache__/
-*.pt
-*.pth
+# Python
 .venv/
-venv/
-*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated outputs (not source data)
+outputs/results/
+outputs/dataset_tiles/
+outputs/dataset_tiles_thermal/
+outputs/dataset_tiles_multiscale/
+outputs/old_results/
+outputs/visible_mask_test/
+outputs/watershed_out/
+
+# Stray outputs (regenerated in root by some scripts)
+clahe_output.jpg
+figure_2x2.png
+floe_motion_vectors.png
+floe_trajectories_*.png
+floe_temperature_stats.csv
+
+# IDE / OS / Tools
+.vscode/
+.idea/
+.claude/
 .DS_Store
 Thumbs.db

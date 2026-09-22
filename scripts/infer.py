@@ -1,3 +1,35 @@
+"""
+infer.py — Single-image UNet inference
+=======================================
+Loads a trained UNet model and runs sliding-window inference on a single image.
+Displays a 3-panel matplotlib figure: original | predicted mask | boundary overlay.
+
+Usage
+-----
+    python scripts/infer.py
+
+Configuration (edit variables at the top of this file)
+------------------------------------------------------
+    MODE            "rgb" or "thermal" — selects weights file and tile size
+    IMAGE_OVERRIDE  Path to a custom image, or None for the mode default
+    THRESHOLD       Probability threshold for binarizing UNet output (default 0.5)
+
+Inputs
+------
+    Image file (from data/images/ or a custom path).
+    Trained weights:
+        - RGB mode:     outputs/dataset_tiles/best_unet.pt
+        - Thermal mode: outputs/dataset_tiles_thermal/best_unet.pt
+
+Outputs
+-------
+    outputs/results/single/infer_{MODE}_result.png
+
+Dependencies
+------------
+    torch, numpy, Pillow, matplotlib
+"""
+
 import random
 from pathlib import Path
 

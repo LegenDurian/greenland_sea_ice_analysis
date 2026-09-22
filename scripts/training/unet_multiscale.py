@@ -1,26 +1,41 @@
 """
-unet_multiscale.py
-------------------
-UNet training for visible-light sea ice images.
+unet_multiscale.py — Multi-image UNet training with on-the-fly augmentation
+============================================================================
+Trains a small UNet on multiple annotated visible-light sea ice images.
+Unlike unet.py (which tiles a single image to disk), this script samples
+random crops on-the-fly each epoch, so the model sees different augmented
+views every epoch.
 
-Key differences from unet.py
-──────────────────────────────
-  No pre-tiling to disk — crops are sampled on-the-fly each epoch, so the
-  model sees a different random subset of the image every epoch.
+Usage
+-----
+    python scripts/training/unet_multiscale.py
 
-  SAMPLES_PER_EPOCH controls how many random crops are drawn per epoch.
-  Decrease it to reduce training cost; increase it to see more of the image.
+    For GPU training, use the Colab notebooks:
+        scripts/training/unet_multiscale_colab.ipynb   — same small UNet
+        scripts/training/unet_pretrained_colab.ipynb   — pretrained ResNet18 encoder
 
-  All image/mask pairs in data/images/training/ are used automatically.
-  Pairs are discovered by matching  {stem}.jpg  →  {stem}_mask.png.
+Configuration (edit variables at the top of this file)
+------------------------------------------------------
+    CROP_SIZE          Random crop size in pixels (default 750)
+    SAMPLES_PER_EPOCH  Number of random crops per epoch (default 150)
+    VAL_FRAC           Fraction of each image reserved for validation (default 0.30)
+    USE_CLAHE          Apply CLAHE preprocessing (default True)
+    EPOCHS             Training epochs (default 75)
+    LR                 Learning rate (default 1e-3)
 
-  Train / val split:
-    Spatial strip per image — top (1-VAL_FRAC) of each image is train,
-    bottom VAL_FRAC is val. All conditions appear in both sets.
+Inputs
+------
+    All {stem}.jpg + {stem}_mask.png pairs in data/images/training/
+    Pairs are discovered automatically; thermal images are filtered out.
 
-Outputs:
-    outputs/dataset_tiles_multiscale/best_unet.pt   — best weights (val Dice)
-    outputs/dataset_tiles_multiscale/train_curve.png
+Outputs
+-------
+    outputs/dataset_tiles_multiscale/best_unet.pt     — best weights (by val Dice)
+    outputs/dataset_tiles_multiscale/train_curve.png   — loss/Dice training curves
+
+Dependencies
+------------
+    torch, numpy, opencv-python, Pillow, matplotlib
 """
 
 import random

@@ -1,3 +1,47 @@
+"""
+binary_mask.py — Core sea ice segmentation library
+===================================================
+Provides the FloeSeparator class for classical (CLAHE + threshold) ice/sea
+segmentation, plus helper functions for floe characterization, fractal
+dimension estimation, temperature analysis, and multi-frame motion tracking.
+
+This module is imported by all inference scripts (batch_infer, infer_tif,
+compare_thermal, batch_infer_visible_multiscale). It can also be run directly
+for quick smoke-testing of the full pipeline.
+
+Classes
+-------
+FloeSeparator
+    Preprocess a single image (CLAHE equalization + binary threshold) and
+    segment it into individually labeled ice floes via erode/dilate separation.
+
+Key Functions
+-------------
+characterize_floes(labels)
+    Ellipse-fit shape metrics (area, perimeter, aspect ratio, circularity)
+    for each labeled floe.
+compute_fractal_dimension(areas, perimeters)
+    Estimate boundary fractal dimension D via log-log P-A regression with
+    95% bootstrap confidence interval.
+measure_raw_contours(mask, min_area_px)
+    Extract raw contour areas/perimeters directly from a binary mask
+    (no erode/dilate smoothing).
+compute_average_temps(temp_arr, labels)
+    Per-floe mean temperature from a float temperature array.
+match_floes / track_floes_over_sequence / compute_avg_velocity_for_full_tracks
+    Multi-frame floe tracking and motion analysis utilities.
+
+Usage
+-----
+    python scripts/binary_mask.py
+
+    (Runs a demo on the thermal timelapse data with motion tracking.)
+
+Dependencies
+------------
+    opencv-python, numpy, matplotlib, Pillow
+"""
+
 import csv
 import cv2 as cv
 import numpy as np
